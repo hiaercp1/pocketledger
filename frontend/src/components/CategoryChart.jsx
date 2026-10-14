@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import { formatDecimalAmount } from '../utils.js';
 
 // Layout constants (logical pixels)
@@ -25,6 +25,12 @@ const VALUE_LABEL_EST_WIDTH = 80;
  */
 export default function CategoryChart({ categoryTotals }) {
   const canvasRef = useRef(null);
+  // Keep a ref to the latest totals so the ResizeObserver closure always
+  // reads current data, not the stale value captured on first render.
+  const totalsRef = useRef(categoryTotals);
+  useEffect(() => {
+    totalsRef.current = categoryTotals;
+  });
 
   /** Read a CSS variable from the canvas element, falling back to a hex literal. */
   function cssVar(canvas, name, fallback) {
@@ -33,14 +39,15 @@ export default function CategoryChart({ categoryTotals }) {
   }
 
   /** Draw the chart onto the canvas. */
-  function draw() {
+  const draw = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    const currentTotals = totalsRef.current;
     const dpr = window.devicePixelRatio || 1;
     const logicalWidth = Math.max(canvas.parentElement ? canvas.parentElement.offsetWidth : 300, 300);
 
-    if (categoryTotals.length === 0) {
+    if (currentTotals.length === 0) {
       // Empty state
       const logicalHeight = EMPTY_HEIGHT;
       canvas.width = logicalWidth * dpr;
@@ -59,7 +66,7 @@ export default function CategoryChart({ categoryTotals }) {
       return;
     }
 
-    const n = categoryTotals.length;
+    const n = currentTotals.length;
     const logicalHeight = ROW_HEIGHT * n + PADDING_TOP + PADDING_BOTTOM;
     canvas.width = logicalWidth * dpr;
     canvas.height = logicalHeight * dpr;
@@ -81,10 +88,10 @@ export default function CategoryChart({ categoryTotals }) {
     const barAreaWidth = logicalWidth - LABEL_WIDTH - VALUE_LABEL_PAD - VALUE_LABEL_EST_WIDTH;
 
     // Max absolute total for proportional scaling
-    const maxAbsTotal = Math.max(...categoryTotals.map((d) => Math.abs(parseFloat(d.total))));
+    const maxAbsTotal = Math.max(...currentTotals.map((d) => Math.abs(parseFloat(d.total))));
 
     for (let i = 0; i < n; i++) {
-      const { category, total } = categoryTotals[i];
+      const { category, total } = currentTotals[i];
       const value = parseFloat(total);
       const isExpense = value < 0;
 
@@ -121,7 +128,7 @@ export default function CategoryChart({ categoryTotals }) {
       ctx.textBaseline = 'middle';
       ctx.fillText(formatDecimalAmount(total), barAreaX + barWidth + VALUE_LABEL_PAD, rowY + ROW_HEIGHT / 2);
     }
-  }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Redraw when data changes
   useEffect(() => {

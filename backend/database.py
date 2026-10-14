@@ -7,12 +7,14 @@ Decimal values are responsible for the conversion.
 import os
 import sqlite3
 from decimal import Decimal
+from pathlib import Path
 
 # ---------------------------------------------------------------------------
 # Connection
 # ---------------------------------------------------------------------------
 
-DB_PATH: str = os.environ.get("POCKETLEDGER_DB", "backend/pocketledger.db")
+_DEFAULT_DB_PATH = str(Path(__file__).resolve().parent / "pocketledger.db")
+DB_PATH: str = os.environ.get("POCKETLEDGER_DB", _DEFAULT_DB_PATH)
 
 
 def get_connection() -> sqlite3.Connection:
@@ -22,7 +24,7 @@ def get_connection() -> sqlite3.Connection:
     multiple uvicorn threads/workers. The caller must close it (use as a
     context manager).
     """
-    path = os.environ.get("POCKETLEDGER_DB", DB_PATH)
+    path = os.environ.get("POCKETLEDGER_DB", _DEFAULT_DB_PATH)
     conn = sqlite3.connect(path)
     conn.row_factory = sqlite3.Row
     return conn

@@ -3,3 +3,5 @@
 [2026-10-14T13:30:02Z] agent ST-4+ST-5: added transactions/summary routers (F1 F2 F3 F5 F9), main.py lifespan+CORS, pytest.ini, tests/test_api.py (13 API tests + 8 data-layer tests, 21/21 passing)
 [2026-10-14T13:33:19Z] [Agent] ST-6/ST-7: implemented api.js, App.jsx state/effects, AddTransaction.jsx (F1 form), TransactionList.jsx (F2/F3/F7), BalanceDisplay.jsx (F4 integer-cents), CategoryBreakdown/CategoryChart placeholders, main.css; added frontend/.env.example; updated start.sh to export VITE_API_TOKEN; build passes
 [2026-10-14T13:35:23.564Z] [Agent] ST-8: implemented CategoryBreakdown.jsx (F5) and CategoryChart.jsx (F6) with shared formatDecimalAmount util, CSS additions, and App.jsx wiring; npm run build passes
+[2026-10-14T13:37:00Z] agent Fix DB_PATH default in backend/database.py to resolve relative to __file__ instead of cwd
+[2026-10-14T13:38:26Z] [agent] Fix CategoryChart.jsx (F6): ResizeObserver stale closure bug — added totalsRef to mirror latest categoryTotals so resize redraws always use current data
