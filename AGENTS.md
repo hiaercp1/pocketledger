@@ -106,7 +106,7 @@ No ESLint, Prettier, or Ruff configured.
 - **Python venv**: `backend/.venv/` — use `.venv/bin/pytest`, `.venv/bin/uvicorn`, etc.
 - **JSX only**: `.jsx` for components, `.js` for utilities. No TypeScript.
 
-## CSV Export (F8)
+## CSV Export (issue #1)
 
 - **Endpoint**: `GET /transactions/export` — bearer-protected, returns `text/csv` with `Content-Disposition: attachment; filename=transactions.csv`.
 - **Columns**: `id, date, description, category, amount` — newest first, same order as `GET /transactions`.

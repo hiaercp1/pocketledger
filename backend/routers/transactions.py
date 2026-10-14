@@ -1,4 +1,4 @@
-"""Transactions router — F1 (POST), F2 (GET), F3 (DELETE), F8 (CSV export).
+"""Transactions router — F1 (POST), F2 (GET), F3 (DELETE), issue #1 (CSV export).
 
 All endpoints require the bearer-token dependency (F9).
 """
@@ -57,7 +57,7 @@ def list_transactions() -> list[TransactionResponse]:
 
 @router.get("/export")
 def export_transactions_csv() -> StreamingResponse:
-    """F8 — Export all transactions as a CSV file, newest first.
+    """issue #1 — Export all transactions as a CSV file, newest first.
 
     Returns a ``text/csv`` response with a Content-Disposition attachment
     header so browsers trigger a file download.  Amounts are exact Decimal
