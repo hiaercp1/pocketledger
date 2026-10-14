@@ -106,6 +106,14 @@ No ESLint, Prettier, or Ruff configured.
 - **Python venv**: `backend/.venv/` — use `.venv/bin/pytest`, `.venv/bin/uvicorn`, etc.
 - **JSX only**: `.jsx` for components, `.js` for utilities. No TypeScript.
 
+## CSV Export (F8)
+
+- **Endpoint**: `GET /transactions/export` — bearer-protected, returns `text/csv` with `Content-Disposition: attachment; filename=transactions.csv`.
+- **Columns**: `id, date, description, category, amount` — newest first, same order as `GET /transactions`.
+- **Amount format**: `Decimal` quantized to exactly 2 decimal places (e.g. `"-5.00"`) via `.quantize(Decimal("0.01"))`.
+- **Route-ordering gotcha**: `/export` must be declared **before** `/{tx_id}` in the router; otherwise FastAPI matches `export` as a path parameter. See [`transactions.py`](backend/routers/transactions.py:58).
+- **Frontend**: `ExportCsvButton.jsx` cannot use `apiFetch()` because the response is a `Blob`, not JSON. It calls `fetch('/api/transactions/export', …)` directly with the bearer token, creates a temporary `<a>` element, triggers `.click()`, then revokes the object URL.
+
 ## Known Limitations
 
 - No pagination on `GET /transactions` — returns all rows.
