@@ -19,3 +19,4 @@ This file provides guidance to agents when working with code in this repository.
 - **JSDoc on every React component**: Describe all props — required by project standards.
 - **Audit log**: Append one line to `bob-audit/audit.log` after every Agent interaction: `[ISO timestamp] [mode] [brief description of change]`.
 - **All endpoints require auth**: Including `GET /health`. Use `Depends(verify_token)` on every endpoint or router.
+- **CSV export**: `GET /transactions/export` returns `text/csv` (bearer-protected). `/export` must be declared before `/{tx_id}` in the router to avoid FastAPI treating `export` as a path parameter. Amounts are quantized to `Decimal("0.01")`. `ExportCsvButton.jsx` uses raw `fetch()` (not `apiFetch()`) because the response is a Blob, not JSON.
