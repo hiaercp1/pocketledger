@@ -10,4 +10,5 @@
 [2026-10-14T13:45:30Z] [agent] [Add CSV export: GET /transactions/export endpoint, 5 pytest tests, ExportCsvButton component (closes #1)]
 [2026-10-14T13:47:39Z] [agent] [Quantize CSV export amounts to two decimal places (Decimal("0.01")); update/add pytest assertions for two-decimal-place format]
 [2026-10-14T13:57:52Z] [agent] [Document CSV export in AGENTS.md and .bob/rules-agent/AGENTS.md; normalize audit.log format to exact rule spec; closes #1 documentation update]
-[2026-10-14T13:58:58.893Z] [agent] Fix mislabel: renamed CSV export tag from F8 to issue #1 in AGENTS.md, backend/routers/transactions.py (module docstring + function docstring), and backend/tests/test_api.py
+[2026-10-14T13:58:58Z] [agent] [Fix mislabel: renamed CSV export tag from F8 to issue #1 in AGENTS.md, backend/routers/transactions.py (module docstring + function docstring), and backend/tests/test_api.py]
+[2026-10-14T14:00:14Z] [agent] [Fix audit.log line 13: correct millisecond timestamp to second-precision and wrap description in square brackets; validate all lines match required format]
