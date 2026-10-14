@@ -1,1 +1,3 @@
 [2026-10-14T13:27:24Z] [Agent] Created .bob/rules/pocketledger-standards.md, .bob/custom_modes.yaml (ledger-reviewer mode), and bob-audit/audit.log
+[2026-10-14T13:29:43Z] [Agent] ST-2+ST-3: added backend/database.py (SQLite data layer), backend/auth.py (bearer token dependency), backend/models.py (Pydantic models with Decimal-as-string serialization and input validation), backend/tests/test_data_layer.py (8 tests, all pass), backend/conftest.py
+[2026-10-14T13:30:02Z] agent ST-4+ST-5: added transactions/summary routers (F1 F2 F3 F5 F9), main.py lifespan+CORS, pytest.ini, tests/test_api.py (13 API tests + 8 data-layer tests, 21/21 passing)
