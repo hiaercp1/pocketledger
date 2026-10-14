@@ -5,6 +5,7 @@ import TransactionList from './components/TransactionList.jsx';
 import BalanceDisplay from './components/BalanceDisplay.jsx';
 import CategoryBreakdown from './components/CategoryBreakdown.jsx';
 import CategoryChart from './components/CategoryChart.jsx';
+import ExportCsvButton from './components/ExportCsvButton.jsx';
 
 /**
  * App — root component that owns global state and wires all sub-components.
@@ -67,6 +68,7 @@ export default function App() {
       <header className="app-header">
         <h1>PocketLedger</h1>
         <BalanceDisplay balance={balance} />
+        <ExportCsvButton onError={setError} />
       </header>
 
       {error && <p className="error-banner">{error}</p>}

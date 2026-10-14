@@ -163,3 +163,66 @@ def test_balance_endpoint(client):
     resp = client.get("/summary/balance", headers=AUTH)
     assert resp.status_code == 200
     assert Decimal(resp.json()["balance"]) == Decimal("150.00")
+
+
+# ---------------------------------------------------------------------------
+# F8 — GET /transactions/export (CSV)
+# ---------------------------------------------------------------------------
+
+
+def test_export_csv_401_without_token(client):
+    """GET /transactions/export returns 401 when no bearer token is provided."""
+    assert client.get("/transactions/export").status_code == 401
+
+
+def test_export_csv_header_row(client):
+    """GET /transactions/export always returns the header row, even when empty."""
+    resp = client.get("/transactions/export", headers=AUTH)
+    assert resp.status_code == 200
+    assert resp.headers["content-type"].startswith("text/csv")
+    lines = resp.text.splitlines()
+    assert lines[0] == "id,date,description,category,amount"
+
+
+def test_export_csv_content(client):
+    """GET /transactions/export returns one data row per transaction, newest first."""
+    client.post(
+        "/transactions",
+        json={"amount": "100.00", "description": "Salary", "category": "Income", "date": "2024-01-01"},
+        headers=AUTH,
+    )
+    client.post(
+        "/transactions",
+        json={"amount": "-25.50", "description": "Groceries", "category": "Food", "date": "2024-06-15"},
+        headers=AUTH,
+    )
+    resp = client.get("/transactions/export", headers=AUTH)
+    assert resp.status_code == 200
+    lines = resp.text.splitlines()
+    # header + 2 data rows
+    assert len(lines) == 3
+    # newest first (2024-06-15)
+    assert "Groceries" in lines[1]
+    assert "-25.5" in lines[1]
+    assert "Salary" in lines[2]
+    assert "100" in lines[2]
+
+
+def test_export_csv_amount_is_exact_decimal(client):
+    """Amounts in the CSV are exact Decimal strings, not floats."""
+    client.post(
+        "/transactions",
+        json={"amount": "9.99", "description": "Coffee", "category": "Food", "date": "2024-03-01"},
+        headers=AUTH,
+    )
+    resp = client.get("/transactions/export", headers=AUTH)
+    assert resp.status_code == 200
+    # Must contain the exact decimal representation, not a float like 9.99000001
+    assert "9.99" in resp.text
+
+
+def test_export_csv_content_disposition(client):
+    """GET /transactions/export sets Content-Disposition to trigger a download."""
+    resp = client.get("/transactions/export", headers=AUTH)
+    assert "attachment" in resp.headers.get("content-disposition", "")
+    assert "transactions.csv" in resp.headers.get("content-disposition", "")
