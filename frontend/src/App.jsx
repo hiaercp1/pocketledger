@@ -89,8 +89,8 @@ export default function App() {
 
         <section className="panel panel--summary">
           <h2>By Category</h2>
-          <CategoryBreakdown categoryTotals={categoryTotals} />
           <CategoryChart categoryTotals={categoryTotals} />
+          <CategoryBreakdown categoryTotals={categoryTotals} />
         </section>
       </main>
     </div>

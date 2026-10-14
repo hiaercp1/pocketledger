@@ -275,6 +275,32 @@ body {
 .tx-row__amount--positive { color: var(--color-income);  font-weight: 600; text-align: right; }
 .tx-row__amount--negative { color: var(--color-expense); font-weight: 600; text-align: right; }
 
+/* ── Category chart ──────────────────────────────────────────────────────── */
+
+.chart-panel canvas {
+  display: block;
+  width: 100%;
+}
+
+.chart-panel__empty {
+  color: var(--color-muted);
+  text-align: center;
+  padding: 1rem 0;
+}
+
+/* ── Category breakdown table additions ──────────────────────────────────── */
+
+.tx-table__amount-col { text-align: right; }
+
+.tx-row__amount {
+  text-align: right;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.tx-row__amount--income  { color: var(--color-income); }
+.tx-row__amount--expense { color: var(--color-expense); }
+
 /* ── Responsive ──────────────────────────────────────────────────────────── */
 
 @media (max-width: 700px) {
