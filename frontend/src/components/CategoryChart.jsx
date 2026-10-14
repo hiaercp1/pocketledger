@@ -87,18 +87,25 @@ export default function CategoryChart({ categoryTotals }) {
     const barAreaX = LABEL_WIDTH;
     const barAreaWidth = logicalWidth - LABEL_WIDTH - VALUE_LABEL_PAD - VALUE_LABEL_EST_WIDTH;
 
-    // Max absolute total for proportional scaling
-    const maxAbsTotal = Math.max(...currentTotals.map((d) => Math.abs(parseFloat(d.total))));
+    /** Convert a Decimal string (e.g. "-150.50") to its absolute value in integer cents. */
+    function absCents(s) {
+      const abs = s.startsWith('-') ? s.slice(1) : s;
+      const [ip, fp = ''] = abs.split('.');
+      return parseInt(ip, 10) * 100 + parseInt(fp.padEnd(2, '0').slice(0, 2), 10);
+    }
+
+    // Max absolute total for proportional scaling (integer cents, no float)
+    const maxAbsTotal = Math.max(...currentTotals.map((d) => absCents(d.total)));
 
     for (let i = 0; i < n; i++) {
       const { category, total } = currentTotals[i];
-      const value = parseFloat(total);
-      const isExpense = value < 0;
+      const isExpense = total.startsWith('-');
+      const valueCents = absCents(total);
 
       const rowY = PADDING_TOP + i * ROW_HEIGHT;
       const barY = rowY + BAR_VERTICAL_PAD;
       const barHeight = ROW_HEIGHT - 2 * BAR_VERTICAL_PAD;
-      const barWidth = maxAbsTotal > 0 ? barAreaWidth * (Math.abs(value) / maxAbsTotal) : 0;
+      const barWidth = maxAbsTotal > 0 ? barAreaWidth * (valueCents / maxAbsTotal) : 0;
 
       // Background track
       ctx.fillStyle = colorBorder;

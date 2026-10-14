@@ -45,6 +45,11 @@ def test_401_without_token(client):
     assert client.get("/transactions").status_code == 401
 
 
+def test_health_401_without_token(client):
+    """GET /health returns 401 when no bearer token is provided."""
+    assert client.get("/health").status_code == 401
+
+
 def test_401_wrong_token(client):
     """A wrong token is also rejected."""
     assert client.get("/transactions", headers={"Authorization": "Bearer wrong"}).status_code == 401

@@ -29,7 +29,7 @@ export default function CategoryBreakdown({ categoryTotals }) {
           </tr>
         ) : (
           categoryTotals.map(({ category, total }) => {
-            const isExpense = parseFloat(total) < 0;
+            const isExpense = total.startsWith('-');
             return (
               <tr key={category} className={`tx-row tx-row--${isExpense ? 'expense' : 'income'}`}>
                 <td>

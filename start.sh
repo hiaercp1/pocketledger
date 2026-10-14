@@ -14,6 +14,10 @@ fi
 echo "[start.sh] Installing backend dependencies …"
 "$BACKEND_DIR/.venv/bin/pip" install --quiet -r "$BACKEND_DIR/requirements.txt"
 
+# DEV-ONLY DEFAULT — "dev-token-123" is a well-known placeholder that exists
+# solely to let the project start out-of-the-box on a developer's laptop.
+# It MUST be overridden by setting POCKETLEDGER_TOKEN (and VITE_API_TOKEN) in
+# the environment before running start.sh in any shared or production context.
 export POCKETLEDGER_TOKEN="${POCKETLEDGER_TOKEN:-dev-token-123}"
 export VITE_API_TOKEN="${VITE_API_TOKEN:-$POCKETLEDGER_TOKEN}"
 

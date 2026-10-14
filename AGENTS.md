@@ -70,4 +70,4 @@ No linter (eslint) or formatter (prettier) is configured yet.
 - **Python venv**: Lives at `backend/.venv/`. Always activate or use `.venv/bin/python` / `.venv/bin/pytest`.
 - **Frontend is JSX, not TSX**: No TypeScript — use `.jsx` for components, `.js` for utilities.
 - **Routers**: New FastAPI route modules go in `backend/routers/`; tests go in `backend/tests/`.
-- **Default dev token**: `start.sh` defaults `POCKETLEDGER_TOKEN` to `dev-token-123` if unset.
+- **Default dev token**: `start.sh` defaults `POCKETLEDGER_TOKEN` to `dev-token-123` if unset. **This default is dev-only.** It MUST be overridden by setting `POCKETLEDGER_TOKEN` (and `VITE_API_TOKEN`) in the environment before running `start.sh` in any shared or production context. The literal value `"dev-token-123"` is publicly known and provides no security.

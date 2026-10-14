@@ -119,3 +119,66 @@ def test_decimal_to_cents_conversion(db):
     database.add_transaction(Decimal("0.20"), "tiny2", "X", "2024-01-02")
 
     assert database.get_balance() == 30  # 10 + 20 cents, exactly
+
+
+# ---------------------------------------------------------------------------
+# _check_date validation tests
+# ---------------------------------------------------------------------------
+
+
+def test_check_date_rejects_calendar_impossible_date():
+    """_check_date must reject dates that are structurally valid but calendar-impossible."""
+    from pydantic import ValidationError
+
+    import models
+
+    with pytest.raises(ValidationError):
+        models.TransactionCreate(
+            amount="10.00",
+            description="x",
+            category="y",
+            date="2024-02-30",  # Feb 30 does not exist
+        )
+
+
+def test_check_date_rejects_april_31():
+    """April has 30 days — the 31st is calendar-impossible."""
+    from pydantic import ValidationError
+
+    import models
+
+    with pytest.raises(ValidationError):
+        models.TransactionCreate(
+            amount="10.00",
+            description="x",
+            category="y",
+            date="2024-04-31",
+        )
+
+
+def test_check_date_accepts_valid_date():
+    """A real calendar date must be accepted without error."""
+    import models
+
+    tx = models.TransactionCreate(
+        amount="10.00",
+        description="x",
+        category="y",
+        date="2024-02-29",  # 2024 is a leap year
+    )
+    assert tx.date == "2024-02-29"
+
+
+def test_check_date_rejects_leap_day_in_non_leap_year():
+    """Feb 29 is invalid in a non-leap year."""
+    from pydantic import ValidationError
+
+    import models
+
+    with pytest.raises(ValidationError):
+        models.TransactionCreate(
+            amount="10.00",
+            description="x",
+            category="y",
+            date="2023-02-29",  # 2023 is not a leap year
+        )

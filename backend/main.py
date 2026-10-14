@@ -2,10 +2,11 @@
 
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 import database
+from auth import verify_token
 from routers import summary, transactions
 
 
@@ -30,5 +31,5 @@ app.include_router(summary.router)
 
 
 @app.get("/health")
-def health():
+def health(_: None = Depends(verify_token)):
     return {"status": "ok"}

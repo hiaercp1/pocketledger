@@ -4,7 +4,7 @@ Amounts are ``Decimal`` throughout Python and serialised as strings in JSON
 responses to preserve precision across the JSON boundary.
 """
 
-import re
+from datetime import date as _date
 from decimal import ROUND_DOWN, Decimal
 
 from pydantic import BaseModel, Field, field_serializer, field_validator
@@ -12,8 +12,6 @@ from pydantic import BaseModel, Field, field_serializer, field_validator
 # ---------------------------------------------------------------------------
 # Shared constants
 # ---------------------------------------------------------------------------
-
-_ISO_DATE_RE = re.compile(r"^\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])$")
 
 # Maximum absolute amount: 1 billion — avoids int overflow when stored as cents.
 _MAX_AMOUNT = Decimal("1000000000")
@@ -39,8 +37,10 @@ def _check_amount(v: Decimal) -> Decimal:
 
 
 def _check_date(v: str) -> str:
-    if not _ISO_DATE_RE.match(v):
-        raise ValueError("date must be in YYYY-MM-DD format")
+    try:
+        _date.fromisoformat(v)
+    except ValueError:
+        raise ValueError("date must be a valid calendar date in YYYY-MM-DD format")
     return v
 
 

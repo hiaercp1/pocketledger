@@ -28,7 +28,8 @@ export default function AddTransaction({ onAdd }) {
       return;
     }
     // Accept numeric with up to 2 decimal places, no sign (sign comes from type toggle)
-    if (!/^\d+(\.\d{1,2})?$/.test(trimmedAmount) || parseFloat(trimmedAmount) === 0) {
+    const numericValue = trimmedAmount.replace(/\./g, '').replace(/^0+/, '') || '0';
+    if (!/^\d+(\.\d{1,2})?$/.test(trimmedAmount) || numericValue === '0') {
       setError('Amount must be a positive number with at most 2 decimal places.');
       return;
     }
