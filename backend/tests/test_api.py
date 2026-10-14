@@ -203,9 +203,9 @@ def test_export_csv_content(client):
     assert len(lines) == 3
     # newest first (2024-06-15)
     assert "Groceries" in lines[1]
-    assert "-25.5" in lines[1]
+    assert "-25.50" in lines[1]
     assert "Salary" in lines[2]
-    assert "100" in lines[2]
+    assert "100.00" in lines[2]
 
 
 def test_export_csv_amount_is_exact_decimal(client):
@@ -217,8 +217,15 @@ def test_export_csv_amount_is_exact_decimal(client):
     )
     resp = client.get("/transactions/export", headers=AUTH)
     assert resp.status_code == 200
-    # Must contain the exact decimal representation, not a float like 9.99000001
+    # Must contain exactly two decimal places, not a float like 9.99000001 or bare 9.99 without trailing zero
     assert "9.99" in resp.text
+    # Verify two-decimal-place format: parse the amount column from the data row
+    lines = resp.text.splitlines()
+    data_row = lines[1]
+    amount_field = data_row.split(",")[-1]
+    # Must match exactly N.NN format (two decimal places, no more, no less)
+    import re
+    assert re.match(r"^-?\d+\.\d{2}$", amount_field), f"Amount {amount_field!r} is not in two-decimal-place format"
 
 
 def test_export_csv_content_disposition(client):

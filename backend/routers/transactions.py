@@ -69,7 +69,7 @@ def export_transactions_csv() -> StreamingResponse:
     writer = csv.writer(output)
     writer.writerow(["id", "date", "description", "category", "amount"])
     for row in rows:
-        amount = str(Decimal(row["amount_cents"]) / 100)
+        amount = str((Decimal(row["amount_cents"]) / 100).quantize(Decimal("0.01")))
         writer.writerow([row["id"], row["date"], row["description"], row["category"], amount])
 
     output.seek(0)
