@@ -15,6 +15,7 @@ echo "[start.sh] Installing backend dependencies …"
 "$BACKEND_DIR/.venv/bin/pip" install --quiet -r "$BACKEND_DIR/requirements.txt"
 
 export POCKETLEDGER_TOKEN="${POCKETLEDGER_TOKEN:-dev-token-123}"
+export VITE_API_TOKEN="${VITE_API_TOKEN:-$POCKETLEDGER_TOKEN}"
 
 echo "[start.sh] Starting uvicorn on :8000 …"
 (cd "$BACKEND_DIR" && "$BACKEND_DIR/.venv/bin/uvicorn" main:app --host 127.0.0.1 --port 8000) &
