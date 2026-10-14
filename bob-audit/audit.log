@@ -6,3 +6,4 @@
 [2026-10-14T13:37:00Z] agent Fix DB_PATH default in backend/database.py to resolve relative to __file__ instead of cwd
 [2026-10-14T13:38:26Z] [agent] Fix CategoryChart.jsx (F6): ResizeObserver stale closure bug — added totalsRef to mirror latest categoryTotals so resize redraws always use current data
 [2026-10-14T13:40:33Z] [Agent] Fixed 4 findings from initial-review.md: protected /health with verify_token + 401 test; replaced parseFloat with string/integer-cents in CategoryBreakdown.jsx, CategoryChart.jsx, AddTransaction.jsx; replaced regex _check_date with date.fromisoformat + 4 calendar-validation tests; added dev-only comment to start.sh and AGENTS.md warning for POCKETLEDGER_TOKEN default
+[2026-10-14T13:42:26Z] [Agent] Updated AGENTS.md and .bob/rules-{agent,ask,plan}/AGENTS.md with verified two-service architecture, auth model, database layer, Canvas chart gotchas, and Bob workflow details
